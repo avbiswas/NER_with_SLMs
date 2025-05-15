@@ -1,0 +1,1218 @@
+{
+    "system_prompt": "\nYou are a data generator for a token classification and intent recognition task.\n\nGenerate examples of user utterances that might occur in email conversation.\nThe number of examples will be specified by the user.\nFor each example, produce a JSON object with the following fields:\n\n1. \"text\": The original user utterance as a natural sentence.\n2. \"labels\": A list of objects where each object includes:\n   - \"word\": the exact word from the text, properly tokenized\n   - \"label\": the entity label using BIO format\n     - Use the following BIO tags:\n       * B-DATE / I-DATE\n       * B-TIME / I-TIME\n       * B-NAME / I-NAME\n       * B-EMAIL / I-EMAIL\n\n3. \"intent\": A label for the overall intent of the utterance. Use one of the following:\n\n   - \"inquiry\" \u2013 the user is asking about meeting details\n   - \"cancel\" \u2013 the user is trying to cancel a meeting\n\n4. Traditional \"O\" tokens are not required to generate labels for. We will assume that unlabelled tokens are \"O\".\nGuidelines:\n- Tokenize text realistically (e.g., \"I'd like to...\" \u2192 [\"I\", \"'d\", \"like\", \"to\", ...])\n- Include only email scheduling-related examples\n- Use realistic, human-like phrasing\n- Ensure a balanced variety of intents\n\nOutput format:\n[\n  {\n    \"text\": \"Let's schedule a meeting at 7 PM next Friday with john@gmail.com.\",\n    \"labels\": [\n      ...\n      {\"word\": \"john@gmail.com\", \"label\": \"B-EMAIL\"}\n      {\"word\": \"7\", \"label\": \"B-TIME\"}\n      {\"word\": \"PM\", \"label\": \"I-TIME\"}\n      {\"word\": \"next\", \"label\": \"B-DATE\"}\n      {\"word\": \"Friday\", \"label\": \"I-DATE\"}\n    ],\n    \"intent\": \"inquiry\"\n  },\n  ...\n]\n\nEnsure that you don't generate the label for the \"O\" tokens.\nShuffle the available entities to generate a more diverse dataset.\n",
+    "model": "gpt-4.1-mini-2025-04-14",
+    "dataset": [
+        {
+            "text": "Can we move our meeting to April 5th at 3 PM with alice.brown@example.com?",
+            "labels": [
+                {
+                    "word": "April",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "5th",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "3",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "alice.brown@example.com",
+                    "label": "B-EMAIL"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "I'd like to cancel the appointment scheduled for May 10th.",
+            "labels": [
+                {
+                    "word": "May",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "10th",
+                    "label": "I-DATE"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Please confirm if the meeting with Dr. Smith at 2 PM on March 22 is still on.",
+            "labels": [
+                {
+                    "word": "Dr.",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "Smith",
+                    "label": "I-NAME"
+                },
+                {
+                    "word": "2",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "March",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "22",
+                    "label": "I-DATE"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "Cancel my meeting with john.doe@example.com scheduled for tomorrow at 10 AM.",
+            "labels": [
+                {
+                    "word": "john.doe@example.com",
+                    "label": "B-EMAIL"
+                },
+                {
+                    "word": "tomorrow",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "10",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Is the call with Sarah Johnson set for 9 AM on the 15th of June?",
+            "labels": [
+                {
+                    "word": "Sarah",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "Johnson",
+                    "label": "I-NAME"
+                },
+                {
+                    "word": "9",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "15th",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "June",
+                    "label": "I-DATE"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "I need to cancel the meeting on Friday at 4 PM with michael.smith@example.com.",
+            "labels": [
+                {
+                    "word": "Friday",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "4",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "michael.smith@example.com",
+                    "label": "B-EMAIL"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Can we reschedule the discussion with Emily Clark to next Monday at 11 AM?",
+            "labels": [
+                {
+                    "word": "Emily",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "Clark",
+                    "label": "I-NAME"
+                },
+                {
+                    "word": "next",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "Monday",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "11",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "Please cancel my appointment with james.wilson@example.com on June 1st at 1 PM.",
+            "labels": [
+                {
+                    "word": "james.wilson@example.com",
+                    "label": "B-EMAIL"
+                },
+                {
+                    "word": "June",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "1st",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "1",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Will the meeting with Dr. Lee on Tuesday at 5 PM be happening as planned?",
+            "labels": [
+                {
+                    "word": "Dr.",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "Lee",
+                    "label": "I-NAME"
+                },
+                {
+                    "word": "Tuesday",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "5",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "Could you please cancel the call with anna.kim@example.com scheduled for next Wednesday at 8 AM?",
+            "labels": [
+                {
+                    "word": "anna.kim@example.com",
+                    "label": "B-EMAIL"
+                },
+                {
+                    "word": "next",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "Wednesday",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "8",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Can we move our call to 3 PM on March 15th?",
+            "labels": [
+                {
+                    "word": "3",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "March",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "15th",
+                    "label": "I-DATE"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "Please cancel the meeting with Sarah at 10 AM tomorrow.",
+            "labels": [
+                {
+                    "word": "Sarah",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "10",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "tomorrow",
+                    "label": "B-DATE"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "I'd like to confirm the appointment with david.smith@example.com on Friday.",
+            "labels": [
+                {
+                    "word": "david.smith@example.com",
+                    "label": "B-EMAIL"
+                },
+                {
+                    "word": "Friday",
+                    "label": "B-DATE"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "Can we reschedule our meeting originally planned for June 1st to next Wednesday?",
+            "labels": [
+                {
+                    "word": "June",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "1st",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "next",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "Wednesday",
+                    "label": "I-DATE"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "I need to cancel my 2 PM meeting with Anna on April 10.",
+            "labels": [
+                {
+                    "word": "2",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "Anna",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "April",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "10",
+                    "label": "I-DATE"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Is the meeting with john.doe@mail.com still on for Monday at 9 AM?",
+            "labels": [
+                {
+                    "word": "john.doe@mail.com",
+                    "label": "B-EMAIL"
+                },
+                {
+                    "word": "Monday",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "9",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "Could you please cancel my appointment scheduled for 11 AM on December 20th?",
+            "labels": [
+                {
+                    "word": "11",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "December",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "20th",
+                    "label": "I-DATE"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Let's confirm the meeting with Michael next Tuesday at 4 PM.",
+            "labels": [
+                {
+                    "word": "Michael",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "next",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "Tuesday",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "4",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "I want to cancel the call with lisa.brown@workmail.com scheduled for tomorrow at noon.",
+            "labels": [
+                {
+                    "word": "lisa.brown@workmail.com",
+                    "label": "B-EMAIL"
+                },
+                {
+                    "word": "tomorrow",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "noon",
+                    "label": "B-TIME"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Are we still on for the 5 PM meeting on October 5 with James?",
+            "labels": [
+                {
+                    "word": "5",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "October",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "5",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "James",
+                    "label": "B-NAME"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "Can we move the meeting to 3 PM on March 15 with alice.smith@example.com?",
+            "labels": [
+                {
+                    "word": "3",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "March",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "15",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "alice.smith@example.com",
+                    "label": "B-EMAIL"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "I need to cancel our appointment with Dr. Brown scheduled for April 10 at 10 AM.",
+            "labels": [
+                {
+                    "word": "Dr.",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "Brown",
+                    "label": "I-NAME"
+                },
+                {
+                    "word": "April",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "10",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "10",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Please confirm if the call with michael.jones@workmail.com is still set for next Tuesday at 9 AM.",
+            "labels": [
+                {
+                    "word": "michael.jones@workmail.com",
+                    "label": "B-EMAIL"
+                },
+                {
+                    "word": "next",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "Tuesday",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "9",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "Can you cancel my meeting with Sarah Connor on July 22?",
+            "labels": [
+                {
+                    "word": "Sarah",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "Connor",
+                    "label": "I-NAME"
+                },
+                {
+                    "word": "July",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "22",
+                    "label": "I-DATE"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Let's set up a call at 4:30 PM this Friday with john.doe@example.org.",
+            "labels": [
+                {
+                    "word": "4:30",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "this",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "Friday",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "john.doe@example.org",
+                    "label": "B-EMAIL"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "I'd like to cancel the meeting scheduled for tomorrow at 2 PM with Emily.",
+            "labels": [
+                {
+                    "word": "tomorrow",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "2",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "Emily",
+                    "label": "B-NAME"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Is the interview with david_lee@company.com still happening on June 5 at 11 AM?",
+            "labels": [
+                {
+                    "word": "david_lee@company.com",
+                    "label": "B-EMAIL"
+                },
+                {
+                    "word": "June",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "5",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "11",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "Please cancel my appointment with Mr. Thompson for August 1 at 3 PM.",
+            "labels": [
+                {
+                    "word": "Mr.",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "Thompson",
+                    "label": "I-NAME"
+                },
+                {
+                    "word": "August",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "1",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "3",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Could we reschedule our meeting to Monday, February 20 at 8 AM with jane.doe@service.net?",
+            "labels": [
+                {
+                    "word": "Monday",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": ",",
+                    "label": "O"
+                },
+                {
+                    "word": "February",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "20",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "8",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "jane.doe@service.net",
+                    "label": "B-EMAIL"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "I want to cancel the conference call with Dr. Anna Lee scheduled on September 30 at 5 PM.",
+            "labels": [
+                {
+                    "word": "Dr.",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "Anna",
+                    "label": "I-NAME"
+                },
+                {
+                    "word": "Lee",
+                    "label": "I-NAME"
+                },
+                {
+                    "word": "September",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "30",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "5",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Can we move our call to 3 PM on April 12th?",
+            "labels": [
+                {
+                    "word": "3",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "April",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "12th",
+                    "label": "I-DATE"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "Please cancel my meeting with Sarah at 10 AM tomorrow.",
+            "labels": [
+                {
+                    "word": "cancel",
+                    "label": "O"
+                },
+                {
+                    "word": "Sarah",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "10",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "tomorrow",
+                    "label": "B-DATE"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "I'd like to reschedule the appointment scheduled for June 5th to 2 PM.",
+            "labels": [
+                {
+                    "word": "June",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "5th",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "2",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "Could you confirm if the meeting with michael.brown@example.com is still on for next Wednesday?",
+            "labels": [
+                {
+                    "word": "michael.brown@example.com",
+                    "label": "B-EMAIL"
+                },
+                {
+                    "word": "next",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "Wednesday",
+                    "label": "I-DATE"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "I need to cancel the conference call scheduled for Friday, March 19.",
+            "labels": [
+                {
+                    "word": "cancel",
+                    "label": "O"
+                },
+                {
+                    "word": "Friday",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "March",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "19",
+                    "label": "I-DATE"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Let's set up a meeting with Anna Lee at 9:30 AM on May 10.",
+            "labels": [
+                {
+                    "word": "Anna",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "Lee",
+                    "label": "I-NAME"
+                },
+                {
+                    "word": "9:30",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "May",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "10",
+                    "label": "I-DATE"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "Please cancel my meeting with john_doe123@mail.com scheduled for 4 PM next Monday.",
+            "labels": [
+                {
+                    "word": "cancel",
+                    "label": "O"
+                },
+                {
+                    "word": "john_doe123@mail.com",
+                    "label": "B-EMAIL"
+                },
+                {
+                    "word": "4",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "next",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "Monday",
+                    "label": "I-DATE"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Is it possible to have a meeting on July 1st at 11 AM with Dr. Emily Watson?",
+            "labels": [
+                {
+                    "word": "July",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "1st",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "11",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "Emily",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "Watson",
+                    "label": "I-NAME"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "I want to cancel the meeting scheduled with mark.smith@company.org on Tuesday at 5 PM.",
+            "labels": [
+                {
+                    "word": "cancel",
+                    "label": "O"
+                },
+                {
+                    "word": "mark.smith@company.org",
+                    "label": "B-EMAIL"
+                },
+                {
+                    "word": "Tuesday",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "5",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Can we confirm the call with Lisa at 8 AM this Thursday?",
+            "labels": [
+                {
+                    "word": "Lisa",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "8",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "Thursday",
+                    "label": "B-DATE"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "Could we move the meeting with Sarah to April 5th at 3 PM?",
+            "labels": [
+                {
+                    "word": "Sarah",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "April",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "5th",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "3",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "Please cancel my appointment on July 20 at 10:30 AM.",
+            "labels": [
+                {
+                    "word": "July",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "20",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "10:30",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "I will be available for a call with michael.brown@example.com next Wednesday at noon.",
+            "labels": [
+                {
+                    "word": "michael.brown@example.com",
+                    "label": "B-EMAIL"
+                },
+                {
+                    "word": "next",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "Wednesday",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "noon",
+                    "label": "B-TIME"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "Can we postpone the meeting scheduled with Anna on March 12?",
+            "labels": [
+                {
+                    "word": "Anna",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "March",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "12",
+                    "label": "I-DATE"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "I need to cancel the meeting with john.doe@example.com tomorrow at 2 PM.",
+            "labels": [
+                {
+                    "word": "john.doe@example.com",
+                    "label": "B-EMAIL"
+                },
+                {
+                    "word": "tomorrow",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "2",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Let's set up a call with Emily for Friday at 9 in the morning.",
+            "labels": [
+                {
+                    "word": "Emily",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "Friday",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "9",
+                    "label": "B-TIME"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "Could you please cancel the meeting scheduled with David on June 1st?",
+            "labels": [
+                {
+                    "word": "David",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "June",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "1st",
+                    "label": "I-DATE"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Is the call with lisa@example.com still on for next Monday at 4 PM?",
+            "labels": [
+                {
+                    "word": "lisa@example.com",
+                    "label": "B-EMAIL"
+                },
+                {
+                    "word": "next",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "Monday",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "4",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "inquiry"
+        },
+        {
+            "text": "I want to cancel my meeting on December 15 at 11 AM.",
+            "labels": [
+                {
+                    "word": "December",
+                    "label": "B-DATE"
+                },
+                {
+                    "word": "15",
+                    "label": "I-DATE"
+                },
+                {
+                    "word": "11",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "AM",
+                    "label": "I-TIME"
+                }
+            ],
+            "intent": "cancel"
+        },
+        {
+            "text": "Can we confirm the appointment with James at 5 PM on Thursday?",
+            "labels": [
+                {
+                    "word": "James",
+                    "label": "B-NAME"
+                },
+                {
+                    "word": "5",
+                    "label": "B-TIME"
+                },
+                {
+                    "word": "PM",
+                    "label": "I-TIME"
+                },
+                {
+                    "word": "Thursday",
+                    "label": "B-DATE"
+                }
+            ],
+            "intent": "inquiry"
+        }
+    ]
+}

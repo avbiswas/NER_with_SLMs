@@ -1,0 +1,4 @@
+.env
+trained_models/*
+temp_models/*
+*__pycache__*
