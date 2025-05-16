@@ -40,7 +40,19 @@ The script will:
 3. Include system prompt and model information in the output
 4. Create a .env file and insert your OPENAI_API_KEY in there
 
+## Set up your Huggingface
+
+Since we are using Huggingface to download the SmolLM2 and DistlBert models, you will need to setup your HF account, produce API keys to login/authenticate.
+
+- Generate Access tokens (https://huggingface.co/docs/hub/security-tokens)
+- Do a cli login with `huggingface-cli login` (https://huggingface.co/docs/huggingface_hub/en/guides/cli)
+- You should be able to run the `default_bert.py` and `default_slm.py` models if your huggingface setup is correctly done.
+
+
 ## Classification Model
+
+We are finetuning a distillbert model that was already tuned for NER.
+Link: https://huggingface.co/dslim/distilbert-NER
 
 ### Training
 The classification model uses BERT for token classification and intent recognition.
@@ -63,6 +75,9 @@ python classification/infer_bert.py path/to/model"
 ```
 
 ## Causal Language Model
+
+We are using one of the smallest causal language models: the SmolLM2-135M-Instruct. This is the smallest I could find, but you should be able to go even lower. Link: https://huggingface.co/HuggingFaceTB/SmolLM2-135M-Instruct
+
 
 ### Training
 The causal language model is trained to generate and understand email-related text.
