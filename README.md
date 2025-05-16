@@ -29,6 +29,9 @@ The `generate_dataset.py` script creates synthetic training data for email conve
 - Intent classification (inquiry, cancel)
 - Realistic email scheduling scenarios
 
+You will need to setup an OPENAI_API_KEY to run the code. The code uses gpt-4.1-mini which is one of the cheapest models OPENAI has. It is dirt cheap.
+(https://platform.openai.com/docs/models/gpt-4.1-mini)
+
 To generate a dataset:
 ```bash
 python generate_dataset.py
