@@ -7,6 +7,7 @@ train_dataset_filename = "datasets/dataset_2dae.json"
 test_dataset_filename = "datasets/dataset_e00a.json"
 
 LABEL_2_ID = {
+    "B-O": 0,
     "B-DATE": 1,
     "I-DATE": 2,
     "B-TIME": 3,
@@ -15,7 +16,6 @@ LABEL_2_ID = {
     "I-EMAIL": 6,
     "B-NAME": 7,
     "I-NAME": 8,
-    "B-O": 0,
 }
 
 
@@ -113,7 +113,7 @@ class TokenClassificationDataset(TorchDataset):
 if __name__ == "__main__":
     causal_model = "HuggingFaceTB/SmolLM2-135M-Instruct"
     tokenizer = AutoTokenizer.from_pretrained(causal_model)
-    ds = CausalLMDataset(tokenizer, split="train", max_length=150)
+    ds = TokenClassificationDataset(tokenizer, split="train", max_length=150)
     for batch in ds:
         print("CausalLM batch:", batch)
         break
