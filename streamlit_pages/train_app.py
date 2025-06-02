@@ -105,7 +105,7 @@ def training_page(model_type="slm"):
             "Number of Epochs",
             min_value=1,
             max_value=50,
-            value=15,
+            value=25,
             help="🔄 Number of complete passes through the training dataset. More epochs can improve performance but may lead to overfitting.",
         )
 
@@ -119,7 +119,7 @@ def training_page(model_type="slm"):
         learning_rate = st.select_slider(
             "Learning Rate",
             options=[1e-5, 5e-5, 1e-4, 5e-4, 1e-3, 5e-3],
-            value=5e-4,
+            value=1e-3,
             format_func=lambda x: f"{x:.0e}",
             help="📈 Step size for gradient descent optimization. Higher rates train faster but may overshoot optimal weights.",
         )
