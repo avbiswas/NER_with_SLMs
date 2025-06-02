@@ -1,5 +1,6 @@
 python-dotenv
-transformers=4.51.3
+transformers==4.51.3
 torch==2.6.0
 peft==0.15.2
 openai==1.78.1
+streamlit==1.45.1

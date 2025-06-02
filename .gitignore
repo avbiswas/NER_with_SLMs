@@ -2,3 +2,5 @@
 trained_models/*
 temp_models/*
 *__pycache__*
+*.DS_Store
+*egg-info*

@@ -3,9 +3,6 @@ from torch.utils.data import Dataset as TorchDataset, DataLoader
 from transformers import AutoTokenizer
 import torch
 
-train_dataset_filename = "datasets/dataset_2dae.json"
-test_dataset_filename = "datasets/dataset_e00a.json"
-
 LABEL_2_ID = {
     "B-O": 0,
     "B-DATE": 1,
@@ -21,17 +18,16 @@ LABEL_2_ID = {
 
 # --- BERT Token Classification Dataset ---
 class TokenClassificationDataset(TorchDataset):
-    def __init__(self, tokenizer, split, max_length=50):
-        if split == "train":
-            with open(train_dataset_filename, "r") as f:
-                self.data = json.load(f)["dataset"]
-        else:
-            with open(test_dataset_filename, "r") as f:
-                self.data = json.load(f)["dataset"]
+    def __init__(self, filenames, tokenizer, labels=LABEL_2_ID, max_length=50):
+        self.data = []
+        for filename in filenames:
+            with open(filename, "r") as f:
+                self.data.extend(json.load(f)["dataset"])
+
         self.tokenizer = tokenizer
         self.max_length = max_length
         # Build label2id and id2label
-        self.label2id = LABEL_2_ID
+        self.label2id = labels
         self.id2label = {i: l for l, i in self.label2id.items()}
 
     def __len__(self):

@@ -1,11 +1,9 @@
 import json
 from transformers import AutoTokenizer, AutoModelForTokenClassification
-from data_loader import LABEL_2_ID
+from .data_loader import LABEL_2_ID
 import torch
 from transformers import pipeline
 import sys
-
-model_path = sys.argv[1]
 
 
 def collapse_entities(ner_results, original_text):
@@ -67,21 +65,26 @@ def collapse_entities(ner_results, original_text):
     return collapsed
 
 
-model = AutoModelForTokenClassification.from_pretrained(
-    model_path, local_files_only=True
-)
-tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
-id2label = {i: l for l, i in LABEL_2_ID.items()}
-model.config.id2label = id2label
-model.config.label2id = LABEL_2_ID
-nlp = pipeline("ner", model=model, tokenizer=tokenizer)
-example = "Let's meet at 10 am on 25 May with avb@gmail.com"
+def infer(model_path, input_text):
+    model = AutoModelForTokenClassification.from_pretrained(
+        model_path, local_files_only=True
+    )
+    tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
+    id2label = {i: l for l, i in LABEL_2_ID.items()}
+    model.config.id2label = id2label
+    model.config.label2id = LABEL_2_ID
+    nlp = pipeline("ner", model=model, tokenizer=tokenizer)
+    ner_results = nlp(input_text)
+    return ner_results
 
-print("Input: ", example)
-ner_results = nlp(example)
-print(f"Raw results: {ner_results}\n")
-# Collapse the entities
-collapsed_results = collapse_entities(ner_results, example)
-print("Collapsed entities:")
-for result in collapsed_results:
-    print(f"{result['entity']}: {result['text']} (confidence: {result['score']:.2f})")
+
+def main():
+    model_path = sys.argv[1]
+    example = "Let's meet at 10 am on 25 May with avb@gmail.com"
+    results = infer(model_path, example)
+    collapsed_results = collapse_entities(results, example)
+    print(collapsed_results)
+
+
+if __name__ == "__main__":
+    main()

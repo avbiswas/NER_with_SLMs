@@ -3,31 +3,14 @@ from torch.utils.data import Dataset as TorchDataset, DataLoader
 from transformers import AutoTokenizer
 import torch
 
-train_dataset_filename = "datasets/dataset_2dae.json"
-test_dataset_filename = "datasets/dataset_e00a.json"
-
-LABEL_2_ID = {
-    "B-DATE": 1,
-    "I-DATE": 2,
-    "B-TIME": 3,
-    "I-TIME": 4,
-    "B-EMAIL": 5,
-    "I-EMAIL": 6,
-    "B-NAME": 7,
-    "I-NAME": 8,
-    "B-O": 0,
-}
-
 
 # --- CausalLM Dataset ---
 class CausalLMDataset(TorchDataset):
-    def __init__(self, tokenizer, split="train", max_length=150):
-        if split == "train":
-            with open(train_dataset_filename, "r") as f:
-                self.data = json.load(f)["dataset"]
-        else:
-            with open(test_dataset_filename, "r") as f:
-                self.data = json.load(f)["dataset"]
+    def __init__(self, filenames: list[str], tokenizer, max_length=150):
+        self.data = []
+        for filename in filenames:
+            with open(filename, "r") as f:
+                self.data.extend(json.load(f)["dataset"])
         self.tokenizer = tokenizer
         self.max_length = max_length
 
