@@ -43,7 +43,7 @@ def infer(model_path, input_text, end_string="[stop]"):
     global CURRENT_MODEL_PATH, model, tokenizer
     print(f"Input: {model_path}")
 
-    if CURRENT_MODEL_PATH != model_path and (model is None or tokenizer is None):
+    if CURRENT_MODEL_PATH != model_path:
         CURRENT_MODEL_PATH = model_path
         print(f"Loading model: {model_path}")
         model = AutoModelForCausalLM.from_pretrained(model_path, local_files_only=True)
